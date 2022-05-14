@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"go-course/helper"
-	"strconv"
 )
 
 var conferenceName = "Go Conference"
@@ -11,15 +10,15 @@ var conferenceName = "Go Conference"
 const conferenceTickets uint = 50
 
 var remainingTickets uint = 50
-var bookings = make([]map[string]string, 0) //Slice
+var bookings = make([]UserData, 0) //Slice
 
 // struct does not support inheritance
-//type UserData struct {
-//	firstName string
-//	lastName string
-//	email string
-//	numberOfTickets uint
-//}
+type UserData struct {
+	firstName       string
+	lastName        string
+	email           string
+	numberOfTickets uint
+}
 
 func main() {
 	fmt.Printf("conferenceTickets is of type %T, remainingTickets is of type %T, conferenceName is %T\n", conferenceTickets, remainingTickets, conferenceName)
@@ -59,7 +58,7 @@ func getFirstNames() []string {
 	firstNames := []string{}
 
 	for _, booking := range bookings {
-		firstNames = append(firstNames, booking["firstName"])
+		firstNames = append(firstNames, booking.firstName)
 	}
 	return firstNames
 }
@@ -94,11 +93,12 @@ func getUserInput() (string, string, string, uint) {
 func bookTicket(userTickets uint, userName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
 
-	var userData = make(map[string]string)
-	userData["firstName"] = userName
-	userData["lastName"] = lastName
-	userData["email"] = email
-	userData["userTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+	var userData = UserData{
+		firstName:       userName,
+		lastName:        lastName,
+		email:           email,
+		numberOfTickets: userTickets,
+	}
 
 	bookings = append(bookings, userData)
 	fmt.Printf("List of bookings is %v\n", bookings)
