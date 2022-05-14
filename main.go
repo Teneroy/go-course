@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"go-course/helper"
-	"strings"
+	"strconv"
 )
 
 var conferenceName = "Go Conference"
@@ -11,7 +11,15 @@ var conferenceName = "Go Conference"
 const conferenceTickets uint = 50
 
 var remainingTickets uint = 50
-var bookings []string //Slice
+var bookings = make([]map[string]string, 0) //Slice
+
+// struct does not support inheritance
+//type UserData struct {
+//	firstName string
+//	lastName string
+//	email string
+//	numberOfTickets uint
+//}
 
 func main() {
 	fmt.Printf("conferenceTickets is of type %T, remainingTickets is of type %T, conferenceName is %T\n", conferenceTickets, remainingTickets, conferenceName)
@@ -26,7 +34,7 @@ func main() {
 		if isValidName && isValidTicketNumber && isValidEmail {
 
 			bookTicket(userTickets, userName, lastName, email)
-			fmt.Printf("First names of our bookings are: %v\n", getFirstNames(bookings))
+			fmt.Printf("First names of our bookings are: %v\n", getFirstNames())
 
 			if remainingTickets == 0 {
 				//end program
@@ -47,12 +55,11 @@ func main() {
 	}
 }
 
-func getFirstNames(bookings []string) []string {
+func getFirstNames() []string {
 	firstNames := []string{}
 
 	for _, booking := range bookings {
-		var names = strings.Fields(booking)
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, booking["firstName"])
 	}
 	return firstNames
 }
@@ -86,7 +93,15 @@ func getUserInput() (string, string, string, uint) {
 
 func bookTicket(userTickets uint, userName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
-	bookings = append(bookings, userName+" "+lastName)
+
+	var userData = make(map[string]string)
+	userData["firstName"] = userName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	userData["userTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+
+	bookings = append(bookings, userData)
+	fmt.Printf("List of bookings is %v\n", bookings)
 
 	fmt.Printf("Thank you %v %v booked %v tickets. You will receive a confirmation on %v\n", userName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
