@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-course/helper"
 	"strings"
 )
 
@@ -20,7 +21,7 @@ func main() {
 	for remainingTickets > 0 && len(bookings) < 50 {
 
 		userName, lastName, email, userTickets := getUserInput()
-		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(userName, lastName, email, userTickets)
+		isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(userName, lastName, email, userTickets, remainingTickets)
 
 		if isValidName && isValidTicketNumber && isValidEmail {
 
@@ -60,14 +61,6 @@ func greetUsers() {
 	fmt.Printf("Welcome to %v booking application\n", conferenceName)
 	fmt.Printf("We have total of %v tickets, and %v are still available\n", conferenceTickets, remainingTickets)
 	fmt.Println("Get your tickets here to attend")
-}
-
-func validateUserInput(userName string, lastName string, email string, userTickets uint) (bool, bool, bool) {
-	var isValidName = len(userName) >= 2 && len(lastName) >= 2
-	var isValidEmail = strings.Contains(email, "@")
-	var isValidTicketNumber = userTickets > 0 && userTickets <= remainingTickets
-
-	return isValidName, isValidEmail, isValidTicketNumber
 }
 
 func getUserInput() (string, string, string, uint) {
