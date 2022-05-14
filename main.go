@@ -5,24 +5,26 @@ import (
 	"strings"
 )
 
-func main() {
-	conferenceName := "Go Conference"
-	const conferenceTickets uint = 50
-	var remainingTickets uint = 50
-	var bookings []string //Slice
+var conferenceName = "Go Conference"
 
+const conferenceTickets uint = 50
+
+var remainingTickets uint = 50
+var bookings []string //Slice
+
+func main() {
 	fmt.Printf("conferenceTickets is of type %T, remainingTickets is of type %T, conferenceName is %T\n", conferenceTickets, remainingTickets, conferenceName)
 
-	greetUsers(conferenceName, conferenceTickets, remainingTickets)
+	greetUsers()
 
 	for remainingTickets > 0 && len(bookings) < 50 {
 
 		userName, lastName, email, userTickets := getUserInput()
-		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(userName, lastName, email, userTickets, remainingTickets)
+		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(userName, lastName, email, userTickets)
 
 		if isValidName && isValidTicketNumber && isValidEmail {
 
-			bookTicket(remainingTickets, userTickets, bookings, userName, lastName, email, conferenceName)
+			bookTicket(userTickets, userName, lastName, email)
 			fmt.Printf("First names of our bookings are: %v\n", getFirstNames(bookings))
 
 			if remainingTickets == 0 {
@@ -54,13 +56,13 @@ func getFirstNames(bookings []string) []string {
 	return firstNames
 }
 
-func greetUsers(conferenceName string, conferenceTickets uint, remainingTickets uint) {
+func greetUsers() {
 	fmt.Printf("Welcome to %v booking application\n", conferenceName)
 	fmt.Printf("We have total of %v tickets, and %v are still available\n", conferenceTickets, remainingTickets)
 	fmt.Println("Get your tickets here to attend")
 }
 
-func validateUserInput(userName string, lastName string, email string, userTickets uint, remainingTickets uint) (bool, bool, bool) {
+func validateUserInput(userName string, lastName string, email string, userTickets uint) (bool, bool, bool) {
 	var isValidName = len(userName) >= 2 && len(lastName) >= 2
 	var isValidEmail = strings.Contains(email, "@")
 	var isValidTicketNumber = userTickets > 0 && userTickets <= remainingTickets
@@ -89,7 +91,7 @@ func getUserInput() (string, string, string, uint) {
 	return userName, lastName, email, userTickets
 }
 
-func bookTicket(remainingTickets uint, userTickets uint, bookings []string, userName string, lastName string, email string, conferenceName string) {
+func bookTicket(userTickets uint, userName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
 	bookings = append(bookings, userName+" "+lastName)
 
